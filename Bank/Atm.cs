@@ -2,7 +2,7 @@
 {
     public class Atm
     {
-        public Atm(IPrinter printer)
+        public Atm(IPrinter printer, IAtmClock clock)
         {
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Bank;
 using Moq;
@@ -11,7 +12,13 @@ namespace Tests
         public void Verify_that_atm_print_the_right_message()
         {
             Mock<IPrinter> printerMock = new Mock<IPrinter>();
-            Atm atm = new Atm(printerMock.Object);
+            Mock<IAtmClock> clockMock = new Mock<IAtmClock>();
+            clockMock.SetupSequence(clock => clock.Today())
+                .Returns(new DateTime(2012, 01, 10))
+                .Returns(new DateTime(2012, 01, 13))
+                .Returns(new DateTime(2012, 01, 14));
+            
+            Atm atm = new Atm(printerMock.Object, clockMock.Object);
             atm.Deposit(new decimal(1000));
             atm.Deposit(new decimal(2000));
             atm.Withdraw(new decimal(500));
