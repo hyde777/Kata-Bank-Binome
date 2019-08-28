@@ -1,6 +1,5 @@
-using System;
 using System.Text;
-using FluentAssertions;
+using Bank;
 using Moq;
 using NUnit.Framework;
 
@@ -8,11 +7,6 @@ namespace Tests
 {
     public class BankAcceptanceTest
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Verify_that_atm_print_the_right_message()
         {
@@ -31,33 +25,6 @@ namespace Tests
                 .AppendLine("10/01/2012 || 1000.00 || || 1000.00");
 
             printerMock.Verify(printer => printer.Print(message.ToString()));
-        }
-    }
-
-    public interface IPrinter
-    {
-        void Print(string message);
-    }
-
-    public class Atm
-    {
-        public Atm(IPrinter printer)
-        {
-        }
-
-        public string Print()
-        {
-            return string.Empty;
-        }
-
-        public void Deposit(decimal p0)
-        {
-            
-        }
-
-        public void Withdraw(decimal @decimal)
-        {
-            
         }
     }
 }
