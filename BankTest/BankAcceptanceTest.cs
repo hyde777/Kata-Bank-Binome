@@ -17,8 +17,10 @@ namespace Tests
                 .Returns(new DateTime(2012, 01, 10))
                 .Returns(new DateTime(2012, 01, 13))
                 .Returns(new DateTime(2012, 01, 14));
-            
-            Atm atm = new Atm(printerMock.Object, clockMock.Object);
+
+            ICardReader dummyCardReader = new Mock<ICardReader>().Object;
+            IAccountManager dummyAccountManager = new Mock<IAccountManager>().Object;
+            Atm atm = new Atm(printerMock.Object, clockMock.Object, dummyCardReader, dummyAccountManager);
             atm.Deposit(new decimal(1000));
             atm.Deposit(new decimal(2000));
             atm.Withdraw(new decimal(500));

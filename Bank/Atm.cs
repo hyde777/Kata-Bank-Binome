@@ -29,7 +29,7 @@ namespace Bank
         {
             Id accountId = cardReader.Authenticate();
             accountManager.Transfer(amountOfMoney, accountId);
-            DateTime today = clock.Today();
+            //DateTime today = clock.Today();
             //history.AddLine(amountOfMoney, accountId, today);
         }
 
