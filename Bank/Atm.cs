@@ -7,10 +7,13 @@ namespace Bank
         private readonly ICardReader cardReader;
         private readonly IAccountManager accountManager;
         private readonly IAtmClock clock;
+        private readonly IHistory history;
 
-     
-        public Atm(IPrinter printer, IAtmClock clock, ICardReader cardReader, IAccountManager accountManager)
+
+        public Atm(IPrinter printer, IAtmClock clock, ICardReader cardReader, IAccountManager accountManager,
+            IHistory history)
         {
+            this.history = history;
             this.clock = clock;
             this.cardReader = cardReader;
             this.accountManager = accountManager;
@@ -23,9 +26,9 @@ namespace Bank
         public void Deposit(decimal amountOfMoney)
         {
             Id accountId = cardReader.Authenticate();
-            accountManager.CalculateBalance(amountOfMoney, accountId);
-            //DateTime today = clock.Today();
-            //history.AddLine(amountOfMoney, accountId, today);
+            decimal balance = accountManager.CalculateBalance(amountOfMoney, accountId);
+            DateTime today = clock.Today();
+            history.AddLine(amountOfMoney, accountId, balance ,today);
         }
 
         public void Withdraw(decimal amountOfMoney)

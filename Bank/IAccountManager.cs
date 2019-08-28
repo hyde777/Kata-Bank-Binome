@@ -2,6 +2,6 @@
 {
     public interface IAccountManager
     {
-        void CalculateBalance(decimal amountOfMoney, Id clientId);
+        decimal CalculateBalance(decimal amountOfMoney, Id clientId);
     }
 }
