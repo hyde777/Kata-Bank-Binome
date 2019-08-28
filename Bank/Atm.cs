@@ -35,7 +35,8 @@ namespace Bank
 
         public void Withdraw(decimal @decimal)
         {
-            
+            Id accountId = cardReader.Authenticate();
+            accountManager.Transfer(-@decimal, accountId);
         }
     }
 }

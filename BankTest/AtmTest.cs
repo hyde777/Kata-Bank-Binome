@@ -20,5 +20,21 @@ namespace Tests
             
             accountManagerMock.Verify(accountManager => accountManager.Transfer(amountOfMoney, clientId));
         }
+
+        [Test]
+        public void METHOD()
+        {
+            Id clientId = new Id("toto");
+            decimal amountOfMoney = new decimal(500);
+            Mock<IAccountManager> accountManagerMock = new Mock<IAccountManager>();
+            Mock<ICardReader> cardReaderMock = new Mock<ICardReader>();
+            Atm atm = new Atm(null, null, cardReaderMock.Object, accountManagerMock.Object);
+            cardReaderMock.Setup(reader => reader.Authenticate()).Returns(clientId);
+
+            atm.Withdraw(amountOfMoney);
+            
+            accountManagerMock.Verify(accountManger => accountManger.Transfer(-amountOfMoney, clientId));
+        }
     }
+    
 }
