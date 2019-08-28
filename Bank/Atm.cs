@@ -36,5 +36,6 @@ namespace Bank
             Id accountId = cardReader.Authenticate();
             accountManager.CalculateBalance(decimal.Negate(amountOfMoney), accountId);
         }
+        
     }
 }
