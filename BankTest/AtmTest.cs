@@ -1,4 +1,5 @@
-﻿using Bank;
+﻿using System;
+using Bank;
 using Moq;
 using NUnit.Framework;
 
@@ -18,11 +19,11 @@ namespace Tests
             
             atm.Deposit(amountOfMoney);
             
-            accountManagerMock.Verify(accountManager => accountManager.Transfer(amountOfMoney, clientId));
+            accountManagerMock.Verify(accountManager => accountManager.CalculateBalance(amountOfMoney, clientId));
         }
 
         [Test]
-        public void METHOD()
+        public void verify_that_amount_of_money_is_withdraw_to_account()
         {
             Id clientId = new Id("toto");
             decimal amountOfMoney = new decimal(500);
@@ -33,7 +34,7 @@ namespace Tests
 
             atm.Withdraw(amountOfMoney);
             
-            accountManagerMock.Verify(accountManger => accountManger.Transfer(-amountOfMoney, clientId));
+            accountManagerMock.Verify(accountManger => accountManger.CalculateBalance(decimal.Negate(amountOfMoney), clientId));
         }
     }
     
