@@ -34,7 +34,7 @@ namespace Tests
             
             atm.Deposit(amountOfMoney);
             
-            accountManagerMock.Verify(accountManager => accountManager.CalculateBalance(amountOfMoney, clientId));
+            accountManagerMock.Verify(accountManager => accountManager.UpdateBalance(amountOfMoney, clientId));
         }
 
         [Test]
@@ -42,12 +42,14 @@ namespace Tests
         {
             Id clientId = new Id("toto");
             decimal amountOfMoney = new decimal(500);
-            Atm atm = new Atm(null, null, cardReaderMock.Object, accountManagerMock.Object, null);
+            IAtmClock dummyClock = new Mock<IAtmClock>().Object;
+            IHistory dummyHistory = new Mock<IHistory>().Object;
+            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, accountManagerMock.Object, dummyHistory);
             SetupCardReader(clientId);
 
             atm.Withdraw(amountOfMoney);
             
-            accountManagerMock.Verify(accountManager => accountManager.CalculateBalance(decimal.Negate(amountOfMoney), clientId));
+            accountManagerMock.Verify(accountManager => accountManager.UpdateBalance(decimal.Negate(amountOfMoney), clientId));
         }
 
         [Test]
@@ -60,7 +62,7 @@ namespace Tests
             decimal balance = previousBalance + amountOfMoney;
             Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, accountManagerMock.Object, historyMock.Object);
             SetupCardReader(clientId);
-            accountManagerMock.Setup(accountManager => accountManager.CalculateBalance(amountOfMoney, clientId))
+            accountManagerMock.Setup(accountManager => accountManager.GetBalance(clientId))
                 .Returns(balance);
             clockMock.Setup(clock => clock.Today())
                 .Returns(today);
@@ -70,6 +72,27 @@ namespace Tests
             historyMock.Verify(history => history.AddLine(amountOfMoney, clientId, balance, today));
         }
 
+        [Test]
+        public void verify_that_withdraw_adds_one_line_of_history()
+        {
+            DateTime today = new DateTime(2012, 1, 14);
+            Id clientId = new Id("toto");
+            decimal amountOfMoney = new decimal(500);
+            decimal previousBalance = 3000;
+            decimal negateMoney = decimal.Negate(amountOfMoney);
+            decimal balance = previousBalance + negateMoney;
+            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, accountManagerMock.Object, historyMock.Object);
+            SetupCardReader(clientId);
+            accountManagerMock.Setup(accountManager => accountManager.GetBalance(clientId))
+                .Returns(balance);
+            clockMock.Setup(clock => clock.Today())
+                .Returns(today);
+            
+            atm.Withdraw(amountOfMoney);
+
+            historyMock.Verify(history => history.AddLine(negateMoney, clientId, balance, today));
+        }
+        
         private void SetupCardReader(Id clientId)
         {
             cardReaderMock.Setup(reader => reader.Authenticate()).Returns(clientId);

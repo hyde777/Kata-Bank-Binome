@@ -20,7 +20,8 @@ namespace Tests
 
             ICardReader dummyCardReader = new Mock<ICardReader>().Object;
             IAccountManager dummyAccountManager = new Mock<IAccountManager>().Object;
-            Atm atm = new Atm(printerMock.Object, clockMock.Object, dummyCardReader, dummyAccountManager, null);
+            IHistory dummyHistory = new Mock<IHistory>().Object;
+            Atm atm = new Atm(printerMock.Object, clockMock.Object, dummyCardReader, dummyAccountManager, dummyHistory);
             atm.Deposit(new decimal(1000));
             atm.Deposit(new decimal(2000));
             atm.Withdraw(new decimal(500));

@@ -2,6 +2,7 @@
 {
     public interface IAccountManager
     {
-        decimal CalculateBalance(decimal amountOfMoney, Id clientId);
+        void UpdateBalance(decimal amountOfMoney, Id clientId);
+        decimal GetBalance(Id accountId);
     }
 }

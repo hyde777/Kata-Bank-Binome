@@ -25,17 +25,22 @@ namespace Bank
 
         public void Deposit(decimal amountOfMoney)
         {
-            Id accountId = cardReader.Authenticate();
-            decimal balance = accountManager.CalculateBalance(amountOfMoney, accountId);
-            DateTime today = clock.Today();
-            history.AddLine(amountOfMoney, accountId, balance ,today);
+            ComputeBalanceAndHistorize(amountOfMoney);
         }
 
         public void Withdraw(decimal amountOfMoney)
         {
-            Id accountId = cardReader.Authenticate();
-            accountManager.CalculateBalance(decimal.Negate(amountOfMoney), accountId);
+            decimal negativeAmountOfMoney = decimal.Negate(amountOfMoney);
+            ComputeBalanceAndHistorize(negativeAmountOfMoney);
         }
-        
+
+        private void ComputeBalanceAndHistorize(decimal amountOfMoney)
+        {
+            Id accountId = cardReader.Authenticate();
+            accountManager.UpdateBalance(amountOfMoney, accountId);
+            decimal balance1 = accountManager.GetBalance(accountId);
+            DateTime today = clock.Today();
+            history.AddLine(amountOfMoney, accountId, balance1, today);
+        }
     }
 }
