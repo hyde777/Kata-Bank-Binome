@@ -11,8 +11,7 @@
 
         public Balance Calculate(decimal amountOfMoney)
         {
-            return new Balance(500);
-            //return new Balance(balance + amountOfMoney);
+            return new Balance(balance + amountOfMoney);
         }
 
         protected bool Equals(Balance other)
