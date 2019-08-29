@@ -11,8 +11,26 @@
 
         public Balance Calculate(decimal amountOfMoney)
         {
-            return null;
+            return new Balance(500);
             //return new Balance(balance + amountOfMoney);
+        }
+
+        protected bool Equals(Balance other)
+        {
+            return balance == other.balance;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Balance) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return balance.GetHashCode();
         }
     }
 }
