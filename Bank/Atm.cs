@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Bank
 {
@@ -7,12 +8,16 @@ namespace Bank
         private readonly ICardReader cardReader;
         private readonly IAccountManager accountManager;
         private readonly IAtmClock clock;
+        private readonly IPrinter printer;
         private readonly IHistory history;
+        private IStringFormatter stringFormatter;
 
 
         public Atm(IPrinter printer, IAtmClock clock, ICardReader cardReader, IAccountManager accountManager,
-            IHistory history)
+            IHistory history, IStringFormatter stringFormatter)
         {
+            this.stringFormatter = stringFormatter;
+            this.printer = printer;
             this.history = history;
             this.clock = clock;
             this.cardReader = cardReader;
@@ -21,6 +26,10 @@ namespace Bank
 
         public void Print()
         {
+            Id accountId = cardReader.Authenticate();
+            List<HistoryLine> historyOfAccount = history.Get(accountId);
+            string formattedHistory = stringFormatter.Format(historyOfAccount);
+            printer.Print(formattedHistory);
         }
 
         public void Deposit(decimal amountOfMoney)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Bank;
 using FluentAssertions.Common;
 using Moq;
@@ -30,7 +32,7 @@ namespace Tests
             SetupCardReader(clientId);
             IHistory dummyHistory = new Mock<IHistory>().Object;
             IAtmClock dummyClock = new Mock<IAtmClock>().Object;
-            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, accountManagerMock.Object, dummyHistory);
+            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, accountManagerMock.Object, dummyHistory, null);
             
             atm.Deposit(amountOfMoney);
             
@@ -44,7 +46,7 @@ namespace Tests
             decimal amountOfMoney = new decimal(500);
             IAtmClock dummyClock = new Mock<IAtmClock>().Object;
             IHistory dummyHistory = new Mock<IHistory>().Object;
-            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, accountManagerMock.Object, dummyHistory);
+            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, accountManagerMock.Object, dummyHistory, null);
             SetupCardReader(clientId);
 
             atm.Withdraw(amountOfMoney);
@@ -60,7 +62,7 @@ namespace Tests
             decimal amountOfMoney = new decimal(1000);
             decimal previousBalance = 0;
             decimal balance = previousBalance + amountOfMoney;
-            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, accountManagerMock.Object, historyMock.Object);
+            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, accountManagerMock.Object, historyMock.Object, null);
             SetupCardReader(clientId);
             accountManagerMock.Setup(accountManager => accountManager.GetBalance(clientId))
                 .Returns(balance);
@@ -81,7 +83,7 @@ namespace Tests
             decimal previousBalance = 3000;
             decimal negateMoney = decimal.Negate(amountOfMoney);
             decimal balance = previousBalance + negateMoney;
-            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, accountManagerMock.Object, historyMock.Object);
+            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, accountManagerMock.Object, historyMock.Object, null);
             SetupCardReader(clientId);
             accountManagerMock.Setup(accountManager => accountManager.GetBalance(clientId))
                 .Returns(balance);
@@ -91,6 +93,30 @@ namespace Tests
             atm.Withdraw(amountOfMoney);
 
             historyMock.Verify(history => history.AddLine(negateMoney, clientId, balance, today));
+        }
+
+        [Test]
+        public void METHOD()
+        {
+            Id accountId = new Id("toto");
+            SetupCardReader(accountId);
+            List<HistoryLine> historyLines =new List<HistoryLine>();
+            historyMock.Setup(history => history.Get(accountId))
+                .Returns(historyLines);
+            StringBuilder formattedHistory = new StringBuilder();
+            formattedHistory.AppendLine("date || credit || debit || balance")
+                .AppendLine("14/01/2012 || || 500.00 || 2500.00")
+                .AppendLine("13/01/2012 || 2000.00 || || 3000.00")
+                .AppendLine("10/01/2012 || 1000.00 || || 1000.00");
+            Mock<IStringFormatter> formatterMock = new Mock<IStringFormatter>();
+            formatterMock.Setup(formatter => formatter.Format(historyLines))
+                .Returns(formattedHistory.ToString());
+            Mock<IPrinter> printerMock = new Mock<IPrinter>();
+            Atm atm = new Atm(printerMock.Object, null, cardReaderMock.Object, null, historyMock.Object, formatterMock.Object);
+            
+            atm.Print();
+            
+            printerMock.Verify(printer => printer.Print(formattedHistory.ToString()));
         }
         
         private void SetupCardReader(Id clientId)
