@@ -6,14 +6,14 @@ namespace Bank
     public class Atm
     {
         private readonly ICardReader cardReader;
-        private readonly IBalanceManager balanceManager;
+        private readonly IBalance balance;
         private readonly IAtmClock clock;
         private readonly IPrinter printer;
         private readonly IHistory history;
         private readonly IStringFormatter stringFormatter;
 
 
-        public Atm(IPrinter printer, IAtmClock clock, ICardReader cardReader, IBalanceManager balanceManager,
+        public Atm(IPrinter printer, IAtmClock clock, ICardReader cardReader, IBalance balance,
             IHistory history, IStringFormatter stringFormatter)
         {
             this.stringFormatter = stringFormatter;
@@ -21,7 +21,7 @@ namespace Bank
             this.history = history;
             this.clock = clock;
             this.cardReader = cardReader;
-            this.balanceManager = balanceManager;
+            this.balance = balance;
         }
 
         public void Print()
@@ -46,8 +46,8 @@ namespace Bank
         private void ComputeBalanceAndHistorize(decimal amountOfMoney)
         {
             Id accountId = cardReader.Authenticate();
-            Balance oldBalance = history.GetBalance(accountId);
-            Balance newBalance = balanceManager.Calculate(amountOfMoney, oldBalance);
+            IBalance oldBalance = history.GetBalance(accountId);
+            Balance newBalance = oldBalance.Calculate(amountOfMoney);
             DateTime today = clock.Today();
             history.AddLine(amountOfMoney, accountId, newBalance, today);
         }

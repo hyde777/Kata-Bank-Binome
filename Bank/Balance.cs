@@ -1,10 +1,18 @@
 ﻿namespace Bank
 {
-    public class Balance
+    public class Balance : IBalance
     {
-        public Balance(decimal amountOfMoney)
+        private readonly decimal balance;
+
+        public Balance(decimal balance)
         {
-            
+            this.balance = balance;
+        }
+
+        public Balance Calculate(decimal amountOfMoney)
+        {
+            return null;
+            //return new Balance(balance + amountOfMoney);
         }
     }
 }

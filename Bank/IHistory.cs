@@ -7,6 +7,6 @@ namespace Bank
     {
         void AddLine(decimal amountOfMoney, Id accountId, Balance balance, in DateTime today);
         List<HistoryLine> Get(Id accountId);
-        Balance GetBalance(Id accountId);
+        IBalance GetBalance(Id accountId);
     }
 }

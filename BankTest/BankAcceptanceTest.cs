@@ -19,10 +19,10 @@ namespace Tests
                 .Returns(new DateTime(2012, 01, 14));
 
             ICardReader dummyCardReader = new Mock<ICardReader>().Object;
-            IBalanceManager dummyBalanceManager = new Mock<IBalanceManager>().Object;
+            IBalance dummyBalance = new Mock<IBalance>().Object;
             IHistory dummyHistory = new Mock<IHistory>().Object;
             IStringFormatter dummyStringFormatter = new Mock<IStringFormatter>().Object;
-            Atm atm = new Atm(printerMock.Object, clockMock.Object, dummyCardReader, dummyBalanceManager, dummyHistory, dummyStringFormatter);
+            Atm atm = new Atm(printerMock.Object, clockMock.Object, dummyCardReader, dummyBalance, dummyHistory, dummyStringFormatter);
             atm.Deposit(new decimal(1000));
             atm.Deposit(new decimal(2000));
             atm.Withdraw(new decimal(500));
