@@ -10,7 +10,7 @@ namespace Bank
         private readonly IAtmClock clock;
         private readonly IPrinter printer;
         private readonly IHistory history;
-        private IStringFormatter stringFormatter;
+        private readonly IStringFormatter stringFormatter;
 
 
         public Atm(IPrinter printer, IAtmClock clock, ICardReader cardReader, IAccountManager accountManager,

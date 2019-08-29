@@ -14,6 +14,8 @@ namespace Tests
         private Mock<ICardReader> cardReaderMock;
         private Mock<IAtmClock> clockMock;
         private Mock<IHistory> historyMock;
+        private Mock<IStringFormatter> formatterMock;
+        private Mock<IPrinter> printerMock;
 
         [SetUp]
         public void setup()
@@ -22,6 +24,8 @@ namespace Tests
             cardReaderMock = new Mock<ICardReader>();
             clockMock = new Mock<IAtmClock>();
             historyMock = new Mock<IHistory>();
+            formatterMock = new Mock<IStringFormatter>();
+            printerMock = new Mock<IPrinter>();
         }
 
         [Test]
@@ -75,6 +79,42 @@ namespace Tests
         }
 
         [Test]
+        public void verify_that_print_call_the_printer()
+        {
+            List<HistoryLine> SetupHistoryMock(Id id)
+            {
+                List<HistoryLine> list = new List<HistoryLine>();
+                historyMock.Setup(history => history.Get(id))
+                    .Returns(list);
+                return list;
+            }
+
+            Id accountId = new Id("toto");
+            SetupCardReader(accountId);
+            List<HistoryLine> historyLines = SetupHistoryMock(accountId);
+            string formattedHistory = SetupStringFormatMock(historyLines);
+            Atm atm = new Atm(printerMock.Object, null, cardReaderMock.Object, 
+                null, historyMock.Object, formatterMock.Object);
+            
+            atm.Print();
+            
+            printerMock.Verify(printer => printer.Print(formattedHistory));
+        }
+
+        private string SetupStringFormatMock(List<HistoryLine> historyLines)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("date || credit || debit || balance")
+                .AppendLine("14/01/2012 || || 500.00 || 2500.00")
+                .AppendLine("13/01/2012 || 2000.00 || || 3000.00")
+                .AppendLine("10/01/2012 || 1000.00 || || 1000.00");
+            string s = stringBuilder.ToString();
+            formatterMock.Setup(formatter => formatter.Format(historyLines))
+                .Returns(s);
+            return s;
+        }
+
+        [Test]
         public void verify_that_withdraw_adds_one_line_of_history()
         {
             DateTime today = new DateTime(2012, 1, 14);
@@ -95,30 +135,6 @@ namespace Tests
             historyMock.Verify(history => history.AddLine(negateMoney, clientId, balance, today));
         }
 
-        [Test]
-        public void METHOD()
-        {
-            Id accountId = new Id("toto");
-            SetupCardReader(accountId);
-            List<HistoryLine> historyLines =new List<HistoryLine>();
-            historyMock.Setup(history => history.Get(accountId))
-                .Returns(historyLines);
-            StringBuilder formattedHistory = new StringBuilder();
-            formattedHistory.AppendLine("date || credit || debit || balance")
-                .AppendLine("14/01/2012 || || 500.00 || 2500.00")
-                .AppendLine("13/01/2012 || 2000.00 || || 3000.00")
-                .AppendLine("10/01/2012 || 1000.00 || || 1000.00");
-            Mock<IStringFormatter> formatterMock = new Mock<IStringFormatter>();
-            formatterMock.Setup(formatter => formatter.Format(historyLines))
-                .Returns(formattedHistory.ToString());
-            Mock<IPrinter> printerMock = new Mock<IPrinter>();
-            Atm atm = new Atm(printerMock.Object, null, cardReaderMock.Object, null, historyMock.Object, formatterMock.Object);
-            
-            atm.Print();
-            
-            printerMock.Verify(printer => printer.Print(formattedHistory.ToString()));
-        }
-        
         private void SetupCardReader(Id clientId)
         {
             cardReaderMock.Setup(reader => reader.Authenticate()).Returns(clientId);
