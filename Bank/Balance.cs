@@ -14,7 +14,7 @@
             return new Balance(balance + amountOfMoney);
         }
 
-        protected bool Equals(Balance other)
+        private bool Equals(Balance other)
         {
             return balance == other.balance;
         }

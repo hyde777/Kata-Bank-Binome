@@ -38,7 +38,7 @@ namespace Tests
             historyMock.Setup(history => history.GetBalance(clientId))
                 .Returns(balanceMock.Object);
             IAtmClock dummyClock = new Mock<IAtmClock>().Object;
-            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, balanceMock.Object, historyMock.Object, null);
+            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, historyMock.Object, null);
             
             atm.Deposit(amountOfMoney);
             
@@ -54,7 +54,7 @@ namespace Tests
             historyMock.Setup(history => history.GetBalance(clientId))
                 .Returns(balanceMock.Object);
             IAtmClock dummyClock = new Mock<IAtmClock>().Object;
-            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, balanceMock.Object, historyMock.Object, null);
+            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, historyMock.Object, null);
             SetupCardReader(clientId);
 
             atm.Withdraw(amountOfMoney);
@@ -68,7 +68,7 @@ namespace Tests
             Id clientId = new Id("toto");
             decimal amountOfMoney = new decimal(1000);
             decimal initialBalance = 0;
-            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, balanceMock.Object, historyMock.Object, null);
+            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, historyMock.Object, null);
             SetupCardReader(clientId);
             Balance initialBalanceFromHistory = new Balance(initialBalance);
             historyMock.Setup(history => history.GetBalance(clientId))
@@ -100,8 +100,7 @@ namespace Tests
             SetupCardReader(accountId);
             List<HistoryLine> historyLines = SetupHistoryMock(accountId);
             string formattedHistory = SetupStringFormatMock(historyLines);
-            Atm atm = new Atm(printerMock.Object, null, cardReaderMock.Object, 
-                null, historyMock.Object, formatterMock.Object);
+            Atm atm = new Atm(printerMock.Object, null, cardReaderMock.Object, historyMock.Object, formatterMock.Object);
             
             atm.Print();
             
@@ -112,7 +111,7 @@ namespace Tests
         public void verify_that_withdraw_adds_one_line_of_history()
         {
             Id clientId = new Id("toto");
-            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, balanceMock.Object, historyMock.Object, null);
+            Atm atm = new Atm(null, clockMock.Object, cardReaderMock.Object, historyMock.Object, null);
             SetupCardReader(clientId);
             decimal amountOfMoney = new decimal(500);
             decimal initialBalance = 3000;
