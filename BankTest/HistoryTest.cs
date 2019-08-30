@@ -55,10 +55,10 @@ namespace Tests
             IHistory history = new History(historyLines);
             decimal amountOfMoney = new decimal(1000);
             Balance balance = new Balance(1000);
-            DateTime mouvementDate = new DateTime(2012, 1, 10);
-            HistoryLine historyLine = new HistoryLine(mouvementDate,amountOfMoney,anyAccountId,balance);
+            DateTime movementDate = new DateTime(2012, 1, 10);
+            HistoryLine historyLine = new HistoryLine(movementDate,amountOfMoney,anyAccountId,balance);
 
-            history.AddLine(amountOfMoney, anyAccountId, balance, mouvementDate);
+            history.AddLine(amountOfMoney, anyAccountId, balance, movementDate);
 
             historyLines[historyLines.Count - 1].Should().Be(historyLine);
         }

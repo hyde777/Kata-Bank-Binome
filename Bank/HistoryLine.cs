@@ -4,22 +4,22 @@ namespace Bank
 {
     public class HistoryLine
     {
-        private readonly decimal credit;
+        private readonly decimal movement;
         private readonly Id id;
         public Balance Balance { get; }
         public DateTime Date { get; }
 
-        public HistoryLine(DateTime date, decimal credit, Id id, Balance balance)
+        public HistoryLine(DateTime date, decimal movement, Id id, Balance balance)
         {
             Date = date;
-            this.Balance = balance;
+            Balance = balance;
             this.id = id;
-            this.credit = credit;
+            this.movement = movement;
         }
 
         private bool Equals(HistoryLine other)
         {
-            return credit == other.credit && id.Equals(other.id);
+            return movement == other.movement && id.Equals(other.id);
         }
 
         public override bool Equals(object obj)
@@ -32,7 +32,7 @@ namespace Bank
 
         public override int GetHashCode()
         {
-            return credit.GetHashCode();
+            return movement.GetHashCode();
         }
 
         public bool OwnedByAccountId(Id accountId)
