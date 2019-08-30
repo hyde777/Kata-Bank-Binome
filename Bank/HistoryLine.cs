@@ -2,16 +2,18 @@
 {
     public class HistoryLine
     {
-        private decimal credit;
+        private readonly decimal credit;
+        private readonly Id id;
 
-        public HistoryLine(decimal credit)
+        public HistoryLine(decimal credit, Id id)
         {
+            this.id = id;
             this.credit = credit;
         }
 
-        protected bool Equals(HistoryLine other)
+        private bool Equals(HistoryLine other)
         {
-            return credit == other.credit;
+            return credit == other.credit && id.Equals(other.id);
         }
 
         public override bool Equals(object obj)
@@ -25,6 +27,11 @@
         public override int GetHashCode()
         {
             return credit.GetHashCode();
+        }
+
+        public bool OwnedByAccountId(Id accountId)
+        {
+            return Equals(accountId, id);
         }
     }
 }

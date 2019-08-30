@@ -6,6 +6,13 @@ namespace Tests
 {
     public class History : IHistory
     {
+        private readonly List<HistoryLine> historyLines;
+
+        public History(List<HistoryLine> historyLines)
+        {
+            this.historyLines = historyLines;
+        }
+
         public void AddLine(decimal amountOfMoney, Id accountId, Balance balance, in DateTime today)
         {
             throw new NotImplementedException();
@@ -15,8 +22,8 @@ namespace Tests
         {
             return new List<HistoryLine>
             {
-                new HistoryLine(1000)
-            };
+                historyLines.Find(line => line.OwnedByAccountId(accountId))
+            };;
         }
 
         public IBalance GetBalance(Id accountId)
