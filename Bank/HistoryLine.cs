@@ -8,6 +8,7 @@ namespace Bank
         private readonly Id id;
         public Balance Balance { get; }
         public DateTime Date { get; }
+        public decimal Movement => movement;
 
         public HistoryLine(DateTime date, decimal movement, Id id, Balance balance)
         {

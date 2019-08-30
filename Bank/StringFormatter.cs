@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace Bank
 {
@@ -6,7 +9,11 @@ namespace Bank
     {
         public string Format(List<HistoryLine> historyLines)
         {
-            return "date || credit || debit || balance";
+            StringBuilder message = new StringBuilder()
+                .AppendLine("date || credit || debit || balance");
+            if(historyLines.Any())    
+                message.AppendLine($"{historyLines[0].Date.ToString("dd/MM/yyyy")} || {string.Format(CultureInfo.InvariantCulture, "{0:0.00}",historyLines[0].Movement)} || || {historyLines[0].Balance}");
+            return message.ToString();
         }
     }
 }

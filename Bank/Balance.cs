@@ -1,4 +1,7 @@
-﻿namespace Bank
+﻿using System;
+using System.Globalization;
+
+namespace Bank
 {
     public class Balance
     {
@@ -30,6 +33,11 @@
         public override int GetHashCode()
         {
             return balance.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", balance);
         }
     }
 }
