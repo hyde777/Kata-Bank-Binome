@@ -20,15 +20,12 @@ namespace Tests
 
         public List<HistoryLine> Get(Id accountId)
         {
-            return new List<HistoryLine>
-            {
-                historyLines.Find(line => line.OwnedByAccountId(accountId))
-            };;
+            return historyLines.FindAll( historyline => historyline.OwnedByAccountId(accountId));
         }
 
         public IBalance GetBalance(Id accountId)
         {
-            throw new NotImplementedException();
+            return new Balance(0);
         }
     }
 }

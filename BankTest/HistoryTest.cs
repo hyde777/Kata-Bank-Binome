@@ -35,9 +35,10 @@ namespace Tests
         public void should_return_lines_with_the_accountid()
         {
             HistoryLine josey = new HistoryLine(2000, new Id("josey"));
+            HistoryLine marie = new HistoryLine(1000, new Id("marie"));
             List<HistoryLine> expectedHistorylines = new List<HistoryLine>
             {
-                new HistoryLine(1000, new Id("marie")),
+                marie,
                 josey
             };
             IHistory history = new History(expectedHistorylines);
@@ -46,6 +47,13 @@ namespace Tests
             {
                 josey
             });
+        }
+
+        [Test]
+        public void should_return_zero_if_no_history_lines()
+        {
+            IBalance balance = new History(new List<HistoryLine>()).GetBalance(null);
+            balance.Should().Be(new Balance(0));
         }
     }
 }
