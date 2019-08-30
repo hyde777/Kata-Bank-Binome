@@ -47,5 +47,20 @@ namespace Tests
             Balance balance = history.GetBalance(anyAccountId);
             balance.Should().Be(new Balance(3000));
         }
+
+        [Test]
+        public void should_add_one_history_line()
+        {
+            List<HistoryLine> historyLines = new List<HistoryLine>();
+            IHistory history = new History(historyLines);
+            decimal amountOfMoney = new decimal(1000);
+            Balance balance = new Balance(1000);
+            DateTime mouvementDate = new DateTime(2012, 1, 10);
+            HistoryLine historyLine = new HistoryLine(mouvementDate,amountOfMoney,anyAccountId,balance);
+
+            history.AddLine(amountOfMoney, anyAccountId, balance, mouvementDate);
+
+            historyLines[historyLines.Count - 1].Should().Be(historyLine);
+        }
     }
 }

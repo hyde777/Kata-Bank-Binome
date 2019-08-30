@@ -17,7 +17,7 @@ namespace Tests
 
         public void AddLine(decimal amountOfMoney, Id accountId, Balance balance, in DateTime today)
         {
-            throw new NotImplementedException();
+            historyLines.Add(new HistoryLine(today, amountOfMoney, accountId, balance));
         }
 
         public List<HistoryLine> Get(Id accountId)
