@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bank;
-using Castle.Core.Internal;
 
-namespace Tests
+namespace Bank
 {
     public class History : IHistory
     {
@@ -27,7 +25,7 @@ namespace Tests
 
         public Balance GetBalance(Id accountId)
         {
-            if (historyLines.IsNullOrEmpty())
+            if (!historyLines.Any())
             {
                 return new Balance(0);
             }
