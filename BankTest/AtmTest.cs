@@ -10,7 +10,6 @@ namespace Tests
 {
     public class AtmTest
     {
-        private Mock<IBalance> balanceMock;
         private Mock<ICardReader> cardReaderMock;
         private Mock<IAtmClock> clockMock;
         private Mock<IHistory> historyMock;
@@ -20,46 +19,13 @@ namespace Tests
         [SetUp]
         public void setup()
         {
-            balanceMock = new Mock<IBalance>();
             cardReaderMock = new Mock<ICardReader>();
             clockMock = new Mock<IAtmClock>();
             historyMock = new Mock<IHistory>();
             formatterMock = new Mock<IStringFormatter>();
             printerMock = new Mock<IPrinter>();
         }
-
-        [Test]
-        public void verify_that_amount_of_money_is_deposited_to_account()
-        {
-            decimal amountOfMoney = new decimal(1000);
-            Id clientId = new Id("toto");
-            SetupCardReader(clientId);
-            Balance initialBalance = new Balance(0);
-            historyMock.Setup(history => history.GetBalance(clientId))
-                .Returns(balanceMock.Object);
-            IAtmClock dummyClock = new Mock<IAtmClock>().Object;
-            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, historyMock.Object, null);
-            
-            atm.Deposit(amountOfMoney);
-            
-            balanceMock.Verify(balanceManager => balanceManager.Calculate(amountOfMoney));
-        }
-
-        [Test]
-        public void verify_that_amount_of_money_is_withdraw_to_account()
-        {
-            Id clientId = new Id("toto");
-            decimal amountOfMoney = new decimal(500);
-            Balance initialBalance = new Balance(3000);
-            historyMock.Setup(history => history.GetBalance(clientId))
-                .Returns(balanceMock.Object);
-            IAtmClock dummyClock = new Mock<IAtmClock>().Object;
-            Atm atm = new Atm(null, dummyClock, cardReaderMock.Object, historyMock.Object, null);
-            SetupCardReader(clientId);
-
-            atm.Withdraw(amountOfMoney);
-            balanceMock.Verify(balanceManager =>balanceManager.Calculate(decimal.Negate(amountOfMoney)));
-        }
+        
 
         [Test]
         public void verify_that_deposit_adds_one_line_of_history()
@@ -72,11 +38,9 @@ namespace Tests
             SetupCardReader(clientId);
             Balance initialBalanceFromHistory = new Balance(initialBalance);
             historyMock.Setup(history => history.GetBalance(clientId))
-                .Returns(balanceMock.Object);
+                .Returns(initialBalanceFromHistory);
             
-            Balance newBalance = new Balance(initialBalance + amountOfMoney);
-            balanceMock.Setup(balanceManager => balanceManager.Calculate(amountOfMoney))
-                .Returns(newBalance);
+            Balance newBalance = initialBalanceFromHistory.Calculate(amountOfMoney);
             clockMock.Setup(clock => clock.Today())
                 .Returns(today);
             
@@ -115,22 +79,14 @@ namespace Tests
             SetupCardReader(clientId);
             decimal amountOfMoney = new decimal(500);
             decimal initialBalance = 3000;
-            SetupHistoryMock(clientId);
-            Balance newBalance = SetupBalanceManagerMock(initialBalance, decimal.Negate(amountOfMoney));
+            historyMock.Setup(history => history.GetBalance(clientId))
+                .Returns(new Balance(initialBalance));
+            Balance newBalance = new Balance(initialBalance).Calculate(decimal.Negate(amountOfMoney));
             DateTime today = SetupClock();
 
             atm.Withdraw(amountOfMoney);
 
             historyMock.Verify(history => history.AddLine(decimal.Negate(amountOfMoney), clientId, newBalance, today));
-        }
-
-        private Balance SetupBalanceManagerMock(decimal initialBalance, decimal negateMoney)
-        {
-            Balance newBalance = new Balance(initialBalance + negateMoney);
-            balanceMock.Setup(balanceManager =>
-                    balanceManager.Calculate(negateMoney))
-                .Returns(newBalance);
-            return newBalance;
         }
 
         private string SetupStringFormatMock(List<HistoryLine> historyLines)
@@ -144,12 +100,6 @@ namespace Tests
             formatterMock.Setup(formatter => formatter.Format(historyLines))
                 .Returns(s);
             return s;
-        }
-
-        private void SetupHistoryMock(Id clientId)
-        {
-            historyMock.Setup(history => history.GetBalance(clientId))
-                .Returns(balanceMock.Object);
         }
 
         private DateTime SetupClock()

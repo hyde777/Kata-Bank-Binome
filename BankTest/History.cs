@@ -25,7 +25,7 @@ namespace Tests
             return historyLines.FindAll( historyline => historyline.OwnedByAccountId(accountId));
         }
 
-        public IBalance GetBalance(Id accountId)
+        public Balance GetBalance(Id accountId)
         {
             if (historyLines.IsNullOrEmpty())
             {

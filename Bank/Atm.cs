@@ -44,7 +44,7 @@ namespace Bank
         private void ComputeBalanceAndHistorize(decimal amountOfMoney)
         {
             Id accountId = cardReader.Authenticate();
-            IBalance oldBalance = history.GetBalance(accountId);
+            Balance oldBalance = history.GetBalance(accountId);
             Balance newBalance = oldBalance.Calculate(amountOfMoney);
             DateTime today = clock.Today();
             history.AddLine(amountOfMoney, accountId, newBalance, today);

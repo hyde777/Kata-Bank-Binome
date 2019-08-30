@@ -1,6 +1,6 @@
 ﻿namespace Bank
 {
-    public class Balance : IBalance
+    public class Balance
     {
         private readonly decimal balance;
 

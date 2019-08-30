@@ -30,7 +30,7 @@ namespace Tests
         [Test]
         public void should_give_initial_balance_if_no_history_lines()
         {
-            IBalance balance = new History(new List<HistoryLine>()).GetBalance(null);
+            Balance balance = new History(new List<HistoryLine>()).GetBalance(null);
             balance.Should().Be(new Balance(0));
         }
 
@@ -42,7 +42,7 @@ namespace Tests
                 new HistoryLine(new DateTime(2000,1,1),0,null,new Balance(1000))
             };
             IHistory history = new History(historyLines);
-            IBalance balance = history.GetBalance(null);
+            Balance balance = history.GetBalance(null);
             balance.Should().Be(new Balance(1000));
         }
 
@@ -55,7 +55,7 @@ namespace Tests
                 new HistoryLine(new DateTime(2012,1,14),0,null,new Balance(3000))
             };
             IHistory history = new History(historyLines);
-            IBalance balance = history.GetBalance(null);
+            Balance balance = history.GetBalance(null);
             balance.Should().Be(new Balance(3000));
         }
     }
