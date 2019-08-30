@@ -7,32 +7,9 @@ namespace Tests
 {
     public class HistoryTest
     {
+       
         [Test]
-        public void should_have_one_history_line_with_credit_1000()
-        {
-            List<HistoryLine> expectation = new List<HistoryLine>
-            {
-                new HistoryLine(1000, null, new Balance(1000))
-            };
-            IHistory history = new History(expectation);
-            List<HistoryLine> historyLines = history.Get(null);
-            historyLines.Should().Equal(expectation);
-        }
-
-        [Test]
-        public void should_have_one_history_line_with_one_credit_2000()
-        {
-            List<HistoryLine> expectation = new List<HistoryLine>
-            {
-                new HistoryLine(2000, null, new Balance(2000))
-            };
-            IHistory history = new History(expectation);
-            List<HistoryLine> historyLines = history.Get(null);
-            historyLines.Should().Equal(expectation);
-        }
-
-        [Test]
-        public void should_return_lines_with_the_accountid()
+        public void should_josey_history_lines_when_we_ask_it()
         {
             HistoryLine josey = new HistoryLine(2000, new Id("josey"), null);
             HistoryLine marie = new HistoryLine(1000, new Id("marie"),null);
@@ -50,14 +27,14 @@ namespace Tests
         }
 
         [Test]
-        public void should_return_zero_if_no_history_lines()
+        public void should_give_initial_balance_if_no_history_lines()
         {
             IBalance balance = new History(new List<HistoryLine>()).GetBalance(null);
             balance.Should().Be(new Balance(0));
         }
 
         [Test]
-        public void should_return_the_balance_when_one_line()
+        public void should_give_the_last_balance()
         {
             List<HistoryLine> historyLines = new List<HistoryLine>
             {
