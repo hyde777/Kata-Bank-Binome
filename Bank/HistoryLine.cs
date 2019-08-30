@@ -1,13 +1,17 @@
-﻿namespace Bank
+﻿using System;
+
+namespace Bank
 {
     public class HistoryLine
     {
         private readonly decimal credit;
         private readonly Id id;
         public Balance Balance { get; }
+        public DateTime Date { get; }
 
-        public HistoryLine(decimal credit, Id id, Balance balance)
+        public HistoryLine(DateTime date, decimal credit, Id id, Balance balance)
         {
+            Date = date;
             this.Balance = balance;
             this.id = id;
             this.credit = credit;

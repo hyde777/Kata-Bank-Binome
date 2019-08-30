@@ -31,7 +31,8 @@ namespace Tests
             {
                 return new Balance(0);
             }
-            return historyLines.FirstOrDefault()?.Balance;
+            return historyLines.OrderByDescending(x => x.Date)
+                                .First().Balance;
         }
     }
 }
