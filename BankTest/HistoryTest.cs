@@ -12,7 +12,7 @@ namespace Tests
         {
             List<HistoryLine> expectation = new List<HistoryLine>
             {
-                new HistoryLine(1000, null)
+                new HistoryLine(1000, null, new Balance(1000))
             };
             IHistory history = new History(expectation);
             List<HistoryLine> historyLines = history.Get(null);
@@ -24,7 +24,7 @@ namespace Tests
         {
             List<HistoryLine> expectation = new List<HistoryLine>
             {
-                new HistoryLine(2000, null)
+                new HistoryLine(2000, null, new Balance(2000))
             };
             IHistory history = new History(expectation);
             List<HistoryLine> historyLines = history.Get(null);
@@ -34,8 +34,8 @@ namespace Tests
         [Test]
         public void should_return_lines_with_the_accountid()
         {
-            HistoryLine josey = new HistoryLine(2000, new Id("josey"));
-            HistoryLine marie = new HistoryLine(1000, new Id("marie"));
+            HistoryLine josey = new HistoryLine(2000, new Id("josey"), null);
+            HistoryLine marie = new HistoryLine(1000, new Id("marie"),null);
             List<HistoryLine> expectedHistorylines = new List<HistoryLine>
             {
                 marie,
@@ -54,6 +54,18 @@ namespace Tests
         {
             IBalance balance = new History(new List<HistoryLine>()).GetBalance(null);
             balance.Should().Be(new Balance(0));
+        }
+
+        [Test]
+        public void should_return_the_balance_when_one_line()
+        {
+            List<HistoryLine> historyLines = new List<HistoryLine>
+            {
+                new HistoryLine(0,null,new Balance(1000))
+            };
+            IHistory history = new History(historyLines);
+            IBalance balance = history.GetBalance(null);
+            balance.Should().Be(new Balance(1000));
         }
     }
 }

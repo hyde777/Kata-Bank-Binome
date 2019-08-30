@@ -4,9 +4,11 @@
     {
         private readonly decimal credit;
         private readonly Id id;
+        public Balance Balance { get; }
 
-        public HistoryLine(decimal credit, Id id)
+        public HistoryLine(decimal credit, Id id, Balance balance)
         {
+            this.Balance = balance;
             this.id = id;
             this.credit = credit;
         }
